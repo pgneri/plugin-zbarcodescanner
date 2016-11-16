@@ -47,7 +47,7 @@
     <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarReaderView.h" />
     <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarReaderViewController.h" />
     <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarSDK.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBardSymbol.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarSymbol.h" />
 
     <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Decoder.h" />
     <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Exception.h" />
