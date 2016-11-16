@@ -8,6 +8,14 @@ Cordova plugin zBarCodeScanner.
 cordova.plugins.barcodeScanner.scan(success, failure, [ options ]);
 ```
 
+Note: Since iOS 10 it's mandatory to add a NSCameraUsageDescription in the info.plist.
+
+NSCameraUsageDescription describes the reason that the app accesses the user’s camera. When the system prompts the user to allow access, this string is displayed as part of the dialog box.
+
+To add this entry you can pass the following variable on plugin install.
+
+cordova plugin add https://github.com/pgneri/plugin-zbarcodescanner --variable CAMERA_USAGE_DESCRIPTION="To scan barcodes"
+
 ### Options
 
 |         Option       | Default Value |        Description        |
