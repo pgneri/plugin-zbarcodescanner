@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    id="com.pgneri.plugin.zbarcodescanner"
+    version="1.0">
+
+    <name>zBarCodeScanner</name>
+    <description>Plugin zBarcodeScanner </description>
+    <license>Apache 2.0</license>
+    <keywords>barcodescanner,barcode,scanner,code</keywords>
+
+<engines>
+    <engine name="cordova" version=">=3.1.0" />
+</engines>
+
+<js-module src="js/barcodescanner.js" name="BarcodeScanner">
+    <clobbers target="cordova.plugins.barcodeScanner" />
+</js-module>
+
+<platform name="ios">
+    <config-file target="config.xml" parent="/*">
+        <feature name="BarcodeScanner">
+            <param name="ios-package" value="BarcodeScanner" />
+        </feature>
+    </config-file>
+    <preference name="CAMERA_USAGE_DESCRIPTION" default=" "/>
+    <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
+      <string>$CAMERA_USAGE_DESCRIPTION</string>
+    </config-file>
+    <framework src="AVFoundation.framework" />
+    <framework src="QuartzCore.framework" />
+    <framework src="CoreVideo.framework" />
+    <framework src="CoreMedia.framework" />
+    <framework src="CoreGraphocs.framework" />
+    <framework src="Foundation.framework" />
+    <framework src="UIKit.framework" />
+    <framework src="libiconv.dylib"/>
+    <framework src="libz.dylib"/>
+
+    <header-file src="src/ios/BarcodeScanner.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarCameraSimulator.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarCaptureReader.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarHelpController.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarImage.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarImageScanner.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarReaderController.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarReaderView.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarReaderViewController.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarSDK.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBardSymbol.h" />
+
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Decoder.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Exception.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Image.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/ImageScanner.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Processor.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Scanner.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Symbol.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Video.h" />
+    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Window.h" />
+
+    <source-file src="src/ios/ZBarSDK/libzbar.a" />
+    <source-file src="src/ios/BarcodeScanner.m" />
+</platform>
+
+
+</plugin>
