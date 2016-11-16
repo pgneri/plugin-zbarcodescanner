@@ -23,8 +23,7 @@
    [reader.scanner setSymbology: ZBAR_UPCA config: ZBAR_CFG_ENABLE to: 0];
    reader.readerView.zoom = 1.0;
 
-   [self presentModalViewController: reader
-                           animated: YES];
+   [self presentViewController:reader animated:YES completion:nil];
 }
 
 
@@ -48,8 +47,8 @@
 
         [alert show];
 
-        [reader dismissModalViewControllerAnimated: YES];
-
+        [reader dismissViewControllerAnimated:YES
+                                           completion:nil];
     }
 
 
