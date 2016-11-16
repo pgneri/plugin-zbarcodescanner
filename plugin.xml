@@ -30,7 +30,7 @@
     <framework src="QuartzCore.framework" />
     <framework src="CoreVideo.framework" />
     <framework src="CoreMedia.framework" />
-    <framework src="CoreGraphocs.framework" />
+    <framework src="CoreGraphics.framework" />
     <framework src="Foundation.framework" />
     <framework src="UIKit.framework" />
     <framework src="libiconv.dylib"/>
@@ -61,7 +61,7 @@
 
     <resource-file src="src/ios/BarcodeScanner.xib"/>
 
-    <source-file src="src/ios/ZBarSDK/libzbar.a" />
+    <source-file src="src/ios/ZBarSDK/libzbar.a" framework="true" custom="true"/>
     <source-file src="src/ios/BarcodeScanner.m" />
 </platform>
 
