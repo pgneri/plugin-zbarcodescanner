@@ -37,31 +37,8 @@
     <framework src="libz.dylib"/>
 
     <header-file src="src/ios/BarcodeScanner.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarCameraSimulator.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarCaptureReader.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarHelpController.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarImage.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarImageScanner.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarReaderController.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarReaderView.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarReaderViewController.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarSDK.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarSymbol.h" />
-
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Decoder.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Exception.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Image.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/ImageScanner.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Processor.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Scanner.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Symbol.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Video.h" />
-    <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Window.h" />
-
+    <resource-file src="src/ios/CDVBarcodeScanner.bundle"/>
     <resource-file src="src/ios/BarcodeScanner.xib"/>
-
-    <source-file src="src/ios/ZBarSDK/libzbar.a" />
     <source-file src="src/ios/BarcodeScanner.m" />
 </platform>
 
