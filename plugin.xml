@@ -59,6 +59,8 @@
     <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Video.h" />
     <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Window.h" />
 
+    <resource-file src="src/ios/BarcodeScanner.xib"/>
+
     <source-file src="src/ios/ZBarSDK/libzbar.a" />
     <source-file src="src/ios/BarcodeScanner.m" />
 </platform>
