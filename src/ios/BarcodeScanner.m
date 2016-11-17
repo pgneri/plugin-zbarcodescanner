@@ -6,7 +6,7 @@
 //
 //
 
-#import "CsZBar.h"
+#import "BarcodeScanner.h"
 #import <AVFoundation/AVFoundation.h>
 #import "PgnScanner.h"
 
