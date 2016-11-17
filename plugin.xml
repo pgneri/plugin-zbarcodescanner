@@ -34,9 +34,7 @@
     <framework src="Foundation.framework" />
     <framework src="UIKit.framework" />
     <framework src="libiconv.dylib"/>
-    <framework src="libz.dylib"/>
 
-    <header-file src="src/ios/BarcodeScanner.h" />
     <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar.h" />
     <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarCameraSimulator.h" />
     <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/ZBarCaptureReader.h" />
@@ -59,9 +57,12 @@
     <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Video.h" />
     <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Window.h" />
 
+    <source-file src="src/ios/ZBarSDK/libzbar.a" framework="true" custom="true"/>
     <resource-file src="src/ios/BarcodeScanner.xib"/>
 
-    <source-file src="src/ios/ZBarSDK/libzbar.a" framework="true" custom="true"/>
+    <header-file src="src/ios/PgnScanner.h" />
+    <header-file src="src/ios/BarcodeScanner.h" />
+    <source-file src="src/ios/PgnScanner.m" />
     <source-file src="src/ios/BarcodeScanner.m" />
 </platform>
 

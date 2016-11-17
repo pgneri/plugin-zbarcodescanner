@@ -6,53 +6,110 @@
 //
 //
 
-#import "BarcodeScanner.h"
+#import "CsZBar.h"
+#import <AVFoundation/AVFoundation.h>
+#import "PgnScanner.h"
+
+#pragma mark - State
+
+@interface BarcodeScanner ()
+@property bool scanInProgress;
+@property NSString *scanCallbackId;
+@property PgnScanner *scanReader;
+
+@end
+
+#pragma mark - Synthesize
 
 @implementation BarcodeScanner
 
-- (void)scan:(CDVInvokedUrlCommand*)command {
-    // NSString *prompt = [command argumentAtIndex:0];
-    // NSString preferFrontCamera = [command argumentAtIndex:2];
-    // NSString showFlipCameraButton = [command argumentAtIndex:1];
-    // NSString formats = [command argumentAtIndex:3];
-    // NSString orientation = [command argumentAtIndex:4];
+@synthesize scanInProgress;
+@synthesize scanCallbackId;
+@synthesize scanReader;
 
-    ZBarReaderViewController *reader = [ZBarReaderViewController new];
-   reader.readerDelegate = self;
+#pragma mark - Cordova Plugin
 
-   [reader.scanner setSymbology: ZBAR_UPCA config: ZBAR_CFG_ENABLE to: 0];
-   reader.readerView.zoom = 1.0;
+- (void)pluginInitialize {
+    self.scanInProgress = NO;
+}
 
-   [self presentViewController:reader animated:YES completion:nil];
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    return;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return YES;
+}
+
+#pragma mark - Plugin API
+
+- (void)scan: (CDVInvokedUrlCommand*)command;
+{
+    if (self.scanInProgress) {
+        [self.commandDelegate
+         sendPluginResult: [CDVPluginResult
+                            resultWithStatus: CDVCommandStatus_ERROR
+                            messageAsString:@"A scan is already in progress."]
+         callbackId: [command callbackId]];
+    } else {
+        self.scanInProgress = YES;
+        self.scanCallbackId = [command callbackId];
+        self.scanReader = [PgnScanner new];
+        self.scanReader.readerDelegate = self;
+        [self.scanReader.scanner setSymbology: ZBAR_UPCA config: ZBAR_CFG_ENABLE to: 0];
+        self.scanReader.readerView.zoom = 1.0;
+
+        [self.viewController presentViewController:self.scanReader animated:YES completion:nil];
+    }
 }
 
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+#pragma mark - Helpers
+
+- (void)sendScanResult: (CDVPluginResult*)result {
+    [self.commandDelegate sendPluginResult: result callbackId: self.scanCallbackId];
 }
 
-- (void) imagePickerController: (UIImagePickerController*) reader
- didFinishPickingMediaWithInfo: (NSDictionary*) info
-{
+#pragma mark - ZBarReaderDelegate
+
+- (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo {
+    return;
+}
+
+- (void)imagePickerController:(UIImagePickerController*)picker didFinishPickingMediaWithInfo:(NSDictionary*)info {
+    if ([self.scanReader isBeingDismissed]) {
+        return;
+    }
+
     id<NSFastEnumeration> results = [info objectForKey: ZBarReaderControllerResults];
 
     ZBarSymbol *symbol = nil;
+    for (symbol in results) break; // get the first result
 
-    for(symbol in results){
-
-        NSString *upcString = symbol.data;
-
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Scanned UPC" message:[NSString stringWithFormat:@"The UPC read was: %@", upcString] delegate:self cancelButtonTitle:nil otherButtonTitles:@"Ok", nil];
-
-        [alert show];
-
-        [reader dismissViewControllerAnimated:YES
-                                           completion:nil];
-    }
-
-
+    [self.scanReader dismissViewControllerAnimated: YES completion: ^(void) {
+        self.scanInProgress = NO;
+        [self sendScanResult: [CDVPluginResult
+                               resultWithStatus: CDVCommandStatus_OK
+                               messageAsString: symbol.data]];
+    }];
 }
 
+- (void) imagePickerControllerDidCancel:(UIImagePickerController*)picker {
+    [self.scanReader dismissViewControllerAnimated: YES completion: ^(void) {
+        self.scanInProgress = NO;
+        [self sendScanResult: [CDVPluginResult
+                                resultWithStatus: CDVCommandStatus_ERROR
+                                messageAsString: @"cancelled"]];
+    }];
+}
+
+- (void) readerControllerDidFailToRead:(ZBarReaderController*)reader withRetry:(BOOL)retry {
+    [self.scanReader dismissViewControllerAnimated: YES completion: ^(void) {
+        self.scanInProgress = NO;
+        [self sendScanResult: [CDVPluginResult
+                                resultWithStatus: CDVCommandStatus_ERROR
+                                messageAsString: @"Failed"]];
+    }];
+}
 
 @end

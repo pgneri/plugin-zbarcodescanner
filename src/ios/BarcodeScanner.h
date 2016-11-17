@@ -7,8 +7,8 @@
 //
 
 #import <Cordova/CDV.h>
-#import <UIKit/UIKit.h>
 #import "ZBarSDK.h"
+#import <UIKit/UIKit.h>
 
 @interface BarcodeScanner : CDVPlugin  <ZBarReaderDelegate> {
 
