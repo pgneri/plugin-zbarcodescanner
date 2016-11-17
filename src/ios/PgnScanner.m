@@ -7,7 +7,7 @@
 //
 
 #import "PgnScanner.h"
-#import "CsZbar.h"
+#import "BarcodeScanner.h"
 
 @interface PgnScanner ()
 
