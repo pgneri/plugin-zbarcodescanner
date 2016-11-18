@@ -20,31 +20,36 @@ cordova plugin add https://github.com/pgneri/plugin-zbarcodescanner --variable C
 
 |         Option       | Default Value |        Description        |
 |----------------------|---------------|---------------------------|
-| preferFrontCamera | false |  |
-| showFlipCameraButton | false |  |
-| prompt | "" | supported on Android only |
-| formats | all |  "QR_CODE,PDF_417" |
-| orientation | "landscape" | Android only (portrait|landscape), default unset so it rotates with the device |
+| preferFrontCamera | false | Android Only |
+| showFlipCameraButton | false | Android Only |
+| prompt | "" | Description value |
+| formats | all |  Android Only, use example: "QR_CODE,PDF_417" |
+| orientation | "portrait" | default portrait, alter overlay mask |
+| flash | off |  iOS only, use 'off', 'on' or 'auto' |
+
 
 ### Example
 
 ```js
 cordova.plugins.barcodeScanner.scan(
-   function (result) {
-       alert("We got a barcode\n" +
-             "Result: " + result.text + "\n" +
-             "Format: " + result.format + "\n" +
-             "Cancelled: " + result.cancelled);
-   },
-   function (error) {
-       alert("Scanning failed: " + error);
-   },
-   {
-       "preferFrontCamera" : true, // iOS and Android
-       "showFlipCameraButton" : true, // iOS and Android
-       "prompt" : "Place a barcode inside the scan area", // supported on Android only
-       "formats" : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
-       "orientation" : "landscape" // Android only (portrait|landscape), default unset so it rotates with the device
-   }
-);
+         function (result) {
+             alert(result);
+             alert("We got a barcode\n" +
+                   "Result: " + result.text + "\n" +
+                   "Format: " + result.format + "\n" +
+                   "Cancelled: " + result.cancelled);
+         },
+         function (error) {
+             alert("Scanning failed: " + error);
+         },
+         {
+             "preferFrontCamera" : true, //  Android Only
+             "showFlipCameraButton" : true, //  Android Only
+             "prompt" : "Place a barcode inside the scan area", // supported on Android only
+             "formats" : "QR_CODE,PDF_417", // Android Only
+             "orientation" : "landscape", //  default portrait
+             "flash" : "auto" // iOS only
+         }
+      );
+
 ```

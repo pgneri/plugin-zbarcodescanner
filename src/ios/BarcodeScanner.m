@@ -97,7 +97,27 @@ BOOL _showFlipCameraButton;
             self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
         }
 
-       self.scanReader.showsZBarControls = NO;
+        float currentVersion = 5.1;
+        float sysVersion = [[[UIDevice currentDevice] systemVersion] floatValue];
+        UIView * infoButton;
+        UIButton *cancelButton;
+
+        if (sysVersion > currentVersion && sysVersion < 10 ) {
+           infoButton = [[[[[self.scanReader.view.subviews objectAtIndex:2] subviews] objectAtIndex:0] subviews] objectAtIndex:3];
+           cancelButton = [[[[[[[self.scanReader.view.subviews objectAtIndex:2] subviews] objectAtIndex:0] subviews] objectAtIndex:2]  subviews] objectAtIndex:0];
+        } else {
+           infoButton = [[[[[self.scanReader.view.subviews objectAtIndex:2] subviews] objectAtIndex:0] subviews] objectAtIndex:1];
+           cancelButton = [[[[[[[self.scanReader.view.subviews objectAtIndex:2] subviews] objectAtIndex:0] subviews] objectAtIndex:0]  subviews] objectAtIndex:0];
+        }
+        [infoButton setHidden:YES];
+
+        [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [[cancelButton titleLabel] setFont:[UIFont systemFontOfSize:18]];
+        [cancelButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
+        [cancelButton setTitle:@"Cancelar" forState:UIControlStateNormal];
+
+
+//       self.scanReader.showsZBarControls = NO;
 
         if([_orientation  isEqual: @"landscape"]){
             [self.scanReader.view.layer addSublayer:[self createOverlayLandscape]];
