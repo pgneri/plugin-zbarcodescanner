@@ -27,6 +27,7 @@
 @synthesize scanCallbackId;
 @synthesize scanReader;
 @synthesize scanningLabel;
+@synthesize backButton;
 
 UIView *_bottomPanel;
 UILabel *_topTitle;
@@ -119,12 +120,12 @@ NSString *_typeScanned;
         [cancelButton setTintColor:[UIColor whiteColor]];
         [cancelButton setTitle:@"Cancelar" forState:UIControlStateNormal];
 
-//       self.scanReader.showsZBarControls = NO;
+       self.scanReader.showsZBarControls = NO;
+       CGRect bounds = [[UIScreen mainScreen] bounds];
 
         if([_orientation  isEqual: @"landscape"]){
             [self.scanReader.view.layer addSublayer:[self createOverlayLandscape]];
 
-            CGRect bounds = [[UIScreen mainScreen] bounds];
              UILabel *tempLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, bounds.size.width-64, bounds.size.height, 30)];
             [self setScanningLabel:tempLabel];
             [scanningLabel setBackgroundColor:[UIColor clearColor]];
@@ -136,7 +137,6 @@ NSString *_typeScanned;
         } else {
             [self.scanReader.view.layer addSublayer:[self createOverlayPortrait]];
 
-            CGRect bounds = [[UIScreen mainScreen] bounds];
              UILabel *tempLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 50, bounds.size.width, 30)];
             [self setScanningLabel:tempLabel];
             [scanningLabel setBackgroundColor:[UIColor clearColor]];
@@ -145,6 +145,15 @@ NSString *_typeScanned;
             scanningLabel.textAlignment = NSTextAlignmentCenter;
             [self.scanReader.view addSubview:scanningLabel];
         }
+
+        UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake(0, bounds.size.height-57, bounds.size.width, 30)];
+        [self setBackButton:tempButton];
+        [backButton setTitle:[NSString stringWithFormat:@"Cancelar"] forState:UIControlStateNormal];
+        [backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [[backButton titleLabel] setFont:[UIFont systemFontOfSize:18]];
+        [backButton addTarget:self action:@selector(buttonCancel) forControlEvents:UIControlEventTouchUpInside];
+        [self.scanReader.view addSubview:backButton];
+
 
         [self.viewController presentViewController:self.scanReader animated:YES completion:nil];
     }
@@ -231,6 +240,23 @@ NSString *_typeScanned;
         [self sendScanResult: [CDVPluginResult
                                resultWithStatus: CDVCommandStatus_OK
                                messageAsDictionary:dictionary]];
+    }];
+}
+
+- (void) buttonCancel {
+
+    NSDictionary *dictionary = @{
+        @"text" : @"",
+        @"format" : @"?????",
+        @"cancelled" : @"1",
+    };
+
+
+    [self.scanReader dismissViewControllerAnimated: YES completion: ^(void) {
+        self.scanInProgress = NO;
+        [self sendScanResult: [CDVPluginResult
+                                resultWithStatus: CDVCommandStatus_ERROR
+                                messageAsDictionary:dictionary]];
     }];
 }
 

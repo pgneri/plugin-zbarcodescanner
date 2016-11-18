@@ -16,5 +16,6 @@
 
 - (void)scan:(CDVInvokedUrlCommand*)command;
 @property (nonatomic, retain) UILabel *scanningLabel;
+@property (nonatomic, retain) UIButton *backButton;
 
 @end
