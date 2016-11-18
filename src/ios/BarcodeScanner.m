@@ -26,6 +26,8 @@
 @synthesize scanInProgress;
 @synthesize scanCallbackId;
 @synthesize scanReader;
+@synthesize scanningLabel;
+
 UIView *_bottomPanel;
 UILabel *_topTitle;
 NSString *_prompt;
@@ -34,6 +36,7 @@ NSString *_flash;
 UIButton *_backButton;
 BOOL _preferFrontCamera;
 BOOL _showFlipCameraButton;
+NSString *_typeScanned;
 
 #pragma mark - Cordova Plugin
 
@@ -113,16 +116,34 @@ BOOL _showFlipCameraButton;
 
         [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [[cancelButton titleLabel] setFont:[UIFont systemFontOfSize:18]];
-        [cancelButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
+        [cancelButton setTintColor:[UIColor whiteColor]];
         [cancelButton setTitle:@"Cancelar" forState:UIControlStateNormal];
-
 
 //       self.scanReader.showsZBarControls = NO;
 
         if([_orientation  isEqual: @"landscape"]){
             [self.scanReader.view.layer addSublayer:[self createOverlayLandscape]];
+
+            CGRect bounds = [[UIScreen mainScreen] bounds];
+             UILabel *tempLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, bounds.size.width-64, bounds.size.height, 30)];
+            [self setScanningLabel:tempLabel];
+            [scanningLabel setBackgroundColor:[UIColor clearColor]];
+            [scanningLabel setTextColor:[UIColor whiteColor]];
+            [scanningLabel setText:_prompt];
+            scanningLabel.transform=CGAffineTransformMakeRotation( ( 90 * M_PI ) / 180 );
+            scanningLabel.textAlignment = NSTextAlignmentCenter;
+            [self.scanReader.view addSubview:scanningLabel];
         } else {
             [self.scanReader.view.layer addSublayer:[self createOverlayPortrait]];
+
+            CGRect bounds = [[UIScreen mainScreen] bounds];
+             UILabel *tempLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 50, bounds.size.width, 30)];
+            [self setScanningLabel:tempLabel];
+            [scanningLabel setBackgroundColor:[UIColor clearColor]];
+            [scanningLabel setTextColor:[UIColor whiteColor]];
+            [scanningLabel setText:_prompt];
+            scanningLabel.textAlignment = NSTextAlignmentCenter;
+            [self.scanReader.view addSubview:scanningLabel];
         }
 
         [self.viewController presentViewController:self.scanReader animated:YES completion:nil];
@@ -142,7 +163,7 @@ BOOL _showFlipCameraButton;
     fillLayer.path = path.CGPath;
     fillLayer.fillRule = kCAFillRuleEvenOdd;
     fillLayer.fillColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1].CGColor;
-    fillLayer.opacity = 0.5;
+    fillLayer.opacity = 0.8;
 
     return fillLayer;
 }
@@ -161,7 +182,7 @@ BOOL _showFlipCameraButton;
     fillLayer.path = path.CGPath;
     fillLayer.fillRule = kCAFillRuleEvenOdd;
     fillLayer.fillColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1].CGColor;
-    fillLayer.opacity = 0.5;
+    fillLayer.opacity = 0.8;
 
     return fillLayer;
 }
@@ -190,13 +211,29 @@ BOOL _showFlipCameraButton;
     ZBarSymbol *symbol = nil;
     for (symbol in results) break; // get the first result
 
+    //PRECISA COLOCAR O FORMATO CERTO - VERIFICAR NA BIBLIOTECA.
+    if(symbol.type == 25){
+        _typeScanned = @"ITF";
+    } else if (symbol.type == 64) {
+        _typeScanned = @"QR_CODE";
+    } else {
+        _typeScanned = @"???";
+    }
+
+    NSDictionary *dictionary = @{
+        @"text" : symbol.data,
+        @"format" : _typeScanned,
+        @"cancelled" : @"0",
+    };
+
     [self.scanReader dismissViewControllerAnimated: YES completion: ^(void) {
         self.scanInProgress = NO;
         [self sendScanResult: [CDVPluginResult
                                resultWithStatus: CDVCommandStatus_OK
-                               messageAsString: symbol.data]];
+                               messageAsDictionary:dictionary]];
     }];
 }
+
 
 - (void) imagePickerControllerDidCancel:(UIImagePickerController*)picker {
     [self.scanReader dismissViewControllerAnimated: YES completion: ^(void) {

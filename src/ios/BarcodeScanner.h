@@ -15,5 +15,6 @@
 }
 
 - (void)scan:(CDVInvokedUrlCommand*)command;
+@property (nonatomic, retain) UILabel *scanningLabel;
 
 @end
