@@ -26,6 +26,12 @@
 @synthesize scanInProgress;
 @synthesize scanCallbackId;
 @synthesize scanReader;
+UIView *_bottomPanel;
+UILabel *_topTitle;
+NSString *_prompt;
+NSString *_orientation;
+NSString *_flash;
+UIButton *_backButton;
 
 #pragma mark - Cordova Plugin
 
@@ -51,7 +57,7 @@
 {
     [[UIDevice currentDevice] performSelector:@selector(setOrientation:)
                                withObject:(__bridge id)((void*)UIInterfaceOrientationMaskPortrait)];
-                               
+    
     if (self.scanInProgress) {
         [self.commandDelegate
          sendPluginResult: [CDVPluginResult
@@ -60,12 +66,65 @@
          callbackId: [command callbackId]];
         
     } else {
+        
+        NSDictionary* options = command.arguments.count == 0 ? [NSNull null] : [command.arguments objectAtIndex:0];
+
+        if ([options isKindOfClass:[NSNull class]]) {
+          options = [NSDictionary dictionary];
+        }
+//        BOOL preferFrontCamera = [options[@"preferFrontCamera"] boolValue];
+//        BOOL showFlipCameraButton = [options[@"showFlipCameraButton"] boolValue];
+        _prompt = options[@"prompt"];
+        _orientation = options[@"orientation"];
+        _flash = options[@"flash"];
+
         self.scanInProgress = YES;
         self.scanCallbackId = [command callbackId];
         self.scanReader = [PgnScanner new];
         self.scanReader.readerDelegate = self;
         [self.scanReader.scanner setSymbology: ZBAR_UPCA config: ZBAR_CFG_ENABLE to: 0];
         self.scanReader.readerView.zoom = 1.0;
+        
+        
+        if ([_flash isEqualToString:@"on"]) {
+            self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeOn;
+        } else if ([_flash isEqualToString:@"off"]) {
+            self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
+        } else if ([_flash isEqualToString:@"auto"]) {
+            self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeAuto;
+        } else {
+            self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
+        }
+        
+         // Hack to hide the bottom bar's Info button... originally based on http://stackoverflow.com/a/16353530
+        NSInteger infoButtonIndex;
+        if ([[[UIDevice currentDevice] systemVersion] compare:@"10.0" options:NSNumericSearch] != NSOrderedAscending) {
+            infoButtonIndex = 1;
+        } else {
+            infoButtonIndex = 3;
+        }
+        UIView *infoButton = [[[[[self.scanReader.view.subviews objectAtIndex:2] subviews] objectAtIndex:0] subviews] objectAtIndex:infoButtonIndex];
+        [infoButton setHidden:YES];
+        
+        UIButton *cancelButton = [[[[[[[self.scanReader.view.subviews objectAtIndex:2] subviews] objectAtIndex:0] subviews] objectAtIndex:2] subviews] objectAtIndex:0];
+        [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [[cancelButton titleLabel] setFont:[UIFont systemFontOfSize:18]];
+        [cancelButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
+        [cancelButton setTitle:@"Cancelar" forState:UIControlStateNormal];
+
+        
+        //self.scanReader.showsZBarControls = NO;
+
+        [self.scanReader.view addSubview:[self createOverlay]];
+        
+        if([_orientation  isEqual: @"landscape"]){
+            NSLog(@"LANDINHO");
+            [self.scanReader.view.layer addSublayer:[self createOverlayLandscape]];
+        } else {
+            NSLog(@"PORTRAITINHO");
+            [self.scanReader.view.layer addSublayer:[self createOverlayPortrait]];
+
+        }
         
         
         
@@ -104,6 +163,109 @@
         [self.viewController presentViewController:self.scanReader animated:YES completion:nil];
     }
 }
+
+#pragma mark - Overlay
+
+
+//- (UIView*)createOverlayPortrait {
+//
+//        CGRect screenRect = [[UIScreen mainScreen] bounds];
+//        CGFloat screenWidth = screenRect.size.width;
+//        CGFloat screenHeight = screenRect.size.height;
+//        
+//        CGFloat polyWidth = (screenWidth / 1.1);
+//        CGFloat polyHeight = (screenWidth / 1.1);
+//        CGFloat polyPosX = (screenWidth/2) - ((screenWidth / 1.1)/2);
+//        CGFloat polyPosY = (screenHeight/2) - ((screenWidth / 1.1)/2);
+//    
+//        UIView *polygonView = [[UIView alloc] initWithFrame: CGRectMake  ( polyPosX, polyPosY, polyWidth, polyHeight)];
+//        UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0,(screenWidth / 1.1) / 2, (screenWidth/1.1), 1)];
+//        lineView.backgroundColor = [UIColor redColor];
+//        [polygonView addSubview:lineView];
+//
+//        return polygonView;
+//}
+
+//- (UIView*)createOverlayLandscape {
+//
+//        CGRect screenRect = [[UIScreen mainScreen] bounds];
+//        CGFloat screenWidth = screenRect.size.width;
+//        CGFloat screenHeight = screenRect.size.height;
+//        
+//        CGFloat polyWidth = (screenWidth / 1.1);
+//        CGFloat polyHeight = (screenWidth / 1.1);
+//        CGFloat polyPosX = (screenWidth/2) - ((screenWidth / 1.1)/2);
+//        CGFloat polyPosY = (screenHeight/2) - ((screenWidth / 1.1)/2);
+//    
+//        UIView *polygonView = [[UIView alloc] initWithFrame: CGRectMake  ( polyPosX, polyPosY, polyWidth, polyHeight)];
+//        UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0,(screenWidth / 1.1) / 2, (screenWidth/1.1), 1)];
+//        lineView.backgroundColor = [UIColor redColor];
+//        [polygonView addSubview:lineView];
+//
+//        return polygonView;
+//}
+
+- (UIView*)createOverlay {
+    UIView *overlay = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    _topTitle = [[UILabel alloc] initWithFrame:CGRectZero];
+    [_topTitle setBackgroundColor: [UIColor clearColor]];
+    [_topTitle setText:[NSString stringWithFormat:@"%@", _prompt]];
+    [_topTitle setTextColor:[UIColor whiteColor]];
+    [_topTitle setFont:[UIFont systemFontOfSize:16]];
+    [_topTitle setTextAlignment:NSTextAlignmentCenter];
+    [overlay addSubview:_topTitle];
+    
+    _bottomPanel = [[UIView alloc] initWithFrame:CGRectZero];
+    [_bottomPanel setBackgroundColor: [UIColor blackColor]];
+    [overlay addSubview:_bottomPanel];
+
+    _backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_backButton setTitle:[NSString stringWithFormat:@"Cancelar"] forState:UIControlStateNormal];
+    [_backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [[_backButton titleLabel] setFont:[UIFont systemFontOfSize:18]];
+//    [_backButton addTarget:self action:@selector(imagePickerControllerDidCancel) forControlEvents:UIControlEventTouchUpInside];
+    [overlay addSubview:_backButton];
+
+    return overlay;
+}
+
+- (CALayer*)createOverlayLandscape {
+    CGRect bounds = [[UIScreen mainScreen] bounds];
+
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake((bounds.size.width/4), 0, bounds.size.width-(bounds.size.width/2), bounds.size.height) cornerRadius:0];
+    UIBezierPath *circlePath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, bounds.size.width, bounds.size.height) cornerRadius:0];
+    [path appendPath:circlePath];
+    [path setUsesEvenOddFillRule:YES];
+    CAShapeLayer *fillLayer = [CAShapeLayer layer];
+    fillLayer.path = path.CGPath;
+    fillLayer.fillRule = kCAFillRuleEvenOdd;
+    fillLayer.fillColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1].CGColor;
+    fillLayer.opacity = 0.5;
+
+    return fillLayer;
+}
+
+
+- (CALayer*)createOverlayPortrait {
+    CGRect bounds = [[UIScreen mainScreen] bounds];
+
+    int radius = bounds.size.width;
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, bounds.size.width, bounds.size.height) cornerRadius:0];
+    UIBezierPath *circlePath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, (bounds.size.height-bounds.size.width)/2, radius, radius) cornerRadius:0];
+    [path appendPath:circlePath];
+    [path setUsesEvenOddFillRule:YES];
+
+    CAShapeLayer *fillLayer = [CAShapeLayer layer];
+    fillLayer.path = path.CGPath;
+    fillLayer.fillRule = kCAFillRuleEvenOdd;
+    fillLayer.fillColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1].CGColor;
+    fillLayer.opacity = 0.5;
+
+    return fillLayer;
+}
+
+
 
 
 #pragma mark - Helpers
@@ -153,5 +315,7 @@
                                 messageAsString: @"Failed"]];
     }];
 }
+
+
 
 @end
