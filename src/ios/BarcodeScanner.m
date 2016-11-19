@@ -61,9 +61,7 @@ NSString *_typeScanned;
 
 - (void)scan: (CDVInvokedUrlCommand*)command;
 {
-    [[UIDevice currentDevice] performSelector:@selector(setOrientation:)
-                               withObject:(__bridge id)((void*)UIInterfaceOrientationMaskPortrait)];
-
+  
     if (self.scanInProgress) {
         [self.commandDelegate
          sendPluginResult: [CDVPluginResult
