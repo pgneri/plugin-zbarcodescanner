@@ -61,7 +61,7 @@ NSString *_typeScanned;
 
 - (void)scan: (CDVInvokedUrlCommand*)command;
 {
-  
+
     if (self.scanInProgress) {
         [self.commandDelegate
          sendPluginResult: [CDVPluginResult
@@ -144,7 +144,7 @@ NSString *_typeScanned;
             [self.scanReader.view addSubview:scanningLabel];
         }
 
-        UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake(0, bounds.size.height-57, bounds.size.width, 30)];
+        UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake(0, (bounds.size.height/10)*9+(bounds.size.height/10/4), bounds.size.width, 30)];
         [self setBackButton:tempButton];
         [backButton setTitle:[NSString stringWithFormat:@"Cancelar"] forState:UIControlStateNormal];
         [backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];

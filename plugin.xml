@@ -58,8 +58,7 @@
     <header-file src="src/ios/ZBarSDK/Headers/ZBarSDK/zbar/Window.h" />
 
     <source-file src="src/ios/ZBarSDK/libzbar.a" framework="true" custom="true"/>
-    <resource-file src="src/ios/BarcodeScanner.xib"/>
-
+    
     <header-file src="src/ios/PgnScanner.h" />
     <header-file src="src/ios/BarcodeScanner.h" />
     <source-file src="src/ios/PgnScanner.m" />
