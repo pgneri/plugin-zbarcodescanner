@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="com.pgneri.plugin.zbarcodescanner"
-    version="1.0">
+    version="1.0.2">
 
     <name>zBarCodeScanner</name>
     <description>Plugin zBarcodeScanner </description>
@@ -65,6 +65,25 @@
     <source-file src="src/ios/PgnScanner.m" />
     <source-file src="src/ios/BarcodeScanner.m" />
 </platform>
-
+<platform name="android">
+  <source-file src="src/android/com/phonegap/plugins/barcodescanner/BarcodeScanner.java" target-dir="src/com/phonegap/plugins/barcodescanner"/>
+  <config-file target="res/xml/config.xml" parent="/*">
+    <feature name="BarcodeScanner">
+      <param name="android-package" value="com.phonegap.plugins.barcodescanner.BarcodeScanner"/>
+    </feature>
+  </config-file>
+  <config-file target="AndroidManifest.xml" parent="/manifest/application">
+    <activity android:name="com.google.zxing.client.android.CaptureActivity" android:clearTaskOnLaunch="true" android:configChanges="orientation|keyboardHidden|screenSize" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:windowSoftInputMode="stateAlwaysHidden" android:exported="false" />
+    <activity android:name="com.google.zxing.client.android.encode.EncodeActivity" android:label="Share"/>
+  </config-file>
+  <config-file target="AndroidManifest.xml" parent="/manifest">
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-feature android:name="android.hardware.camera" android:required="true"/>
+  </config-file>
+  <framework src="src/android/barcodescanner.gradle" custom="true" type="gradleReference"/>
+  <resource-file src="src/android/barcodescanner-release-2.0.1.aar" target="libs/barcodescanner.aar"/>
+  <dependency id="cordova-plugin-compat" version="^1.0.0"/>
+</platform>
 
 </plugin>

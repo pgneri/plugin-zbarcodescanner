@@ -1,0 +1,42 @@
+{
+  "name": "plugin-zbarcodescanner",
+  "version": "1.0.2",
+  "description": "",
+  "cordova": {
+    "id": "com.pgneri.plugin.zbarcodescanner",
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pgneri/plugin-zbarcodescanner"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "ecosystem:phonegap",
+    "cordova-ios",
+    "cordova-android",
+    "cordova:plugin"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.1.0"
+    }
+  ],
+  "author": "Patrícia Gabriele Neri",
+  "license": "Apache",
+  "bugs": {
+    "url": "https://github.com/pgneri/plugin-zbarcodescanner/issues"
+  },
+  "homepage": "https://github.com/pgneri/plugin-zbarcodescanner#readme",
+  "scripts": {
+    "test": "jasmine-node --color spec"
+  },
+  "devDependencies": {
+    "jasmine-node": "1.14.5",
+    "pluginpub": "^0.0.5"
+  }
+}
