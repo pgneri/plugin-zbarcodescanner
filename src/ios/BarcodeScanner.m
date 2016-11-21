@@ -34,6 +34,7 @@ UILabel *_topTitle;
 NSString *_prompt;
 NSString *_orientation;
 NSString *_flash;
+NSString *_titleButtonCancel;
 UIButton *_backButton;
 BOOL _preferFrontCamera;
 BOOL _showFlipCameraButton;
@@ -81,6 +82,7 @@ NSString *_typeScanned;
         _prompt = options[@"prompt"];
         _orientation = options[@"orientation"];
         _flash = options[@"flash"];
+        _titleButtonCancel = options[@"titleButtonCancel"];
 
         self.scanInProgress = YES;
         self.scanCallbackId = [command callbackId];
@@ -99,11 +101,18 @@ NSString *_typeScanned;
             self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
         }
 
+        if(_titleButtonCancel==nil){
+          _titleButtonCancel = @"Cancel";
+        }
+
         float currentVersion = 5.1;
         float sysVersion = [[[UIDevice currentDevice] systemVersion] floatValue];
         UIView * infoButton;
         UIButton *cancelButton;
 
+        /* *******
+        ** config to official ZBarControls
+        */
         if (sysVersion > currentVersion && sysVersion < 10 ) {
            infoButton = [[[[[self.scanReader.view.subviews objectAtIndex:2] subviews] objectAtIndex:0] subviews] objectAtIndex:3];
            cancelButton = [[[[[[[self.scanReader.view.subviews objectAtIndex:2] subviews] objectAtIndex:0] subviews] objectAtIndex:2]  subviews] objectAtIndex:0];
@@ -116,9 +125,12 @@ NSString *_typeScanned;
         [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [[cancelButton titleLabel] setFont:[UIFont systemFontOfSize:18]];
         [cancelButton setTintColor:[UIColor whiteColor]];
-        [cancelButton setTitle:@"Cancelar" forState:UIControlStateNormal];
+        [cancelButton setTitle:@"%@", _titleButtonCancel forState:UIControlStateNormal];
+        /*****************/
 
+       //comment this to use official ZBarControls
        self.scanReader.showsZBarControls = NO;
+
        CGRect bounds = [[UIScreen mainScreen] bounds];
 
         if([_orientation  isEqual: @"landscape"]){
@@ -146,7 +158,7 @@ NSString *_typeScanned;
 
         UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake(0, (bounds.size.height/10)*9+(bounds.size.height/10/4), bounds.size.width, 30)];
         [self setBackButton:tempButton];
-        [backButton setTitle:[NSString stringWithFormat:@"Cancelar"] forState:UIControlStateNormal];
+        [backButton setTitle:[NSString stringWithFormat:@"%@", _titleButtonCancel] forState:UIControlStateNormal];
         [backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [[backButton titleLabel] setFont:[UIFont systemFontOfSize:18]];
         [backButton addTarget:self action:@selector(buttonCancel) forControlEvents:UIControlEventTouchUpInside];
@@ -194,8 +206,6 @@ NSString *_typeScanned;
     return fillLayer;
 }
 
-
-
 #pragma mark - Helpers
 
 - (void)sendScanResult: (CDVPluginResult*)result {
@@ -218,7 +228,7 @@ NSString *_typeScanned;
     ZBarSymbol *symbol = nil;
     for (symbol in results) break; // get the first result
 
-    //PRECISA COLOCAR O FORMATO CERTO - VERIFICAR NA BIBLIOTECA.
+    //Create type library in next update.
     if(symbol.type == 25){
         _typeScanned = @"ITF";
     } else if (symbol.type == 64) {
@@ -241,6 +251,7 @@ NSString *_typeScanned;
     }];
 }
 
+//Function on custom button cancel
 - (void) buttonCancel {
 
     NSDictionary *dictionary = @{
@@ -258,7 +269,7 @@ NSString *_typeScanned;
     }];
 }
 
-
+//Function on official button cancel ZBarControls
 - (void) imagePickerControllerDidCancel:(UIImagePickerController*)picker {
     [self.scanReader dismissViewControllerAnimated: YES completion: ^(void) {
         self.scanInProgress = NO;

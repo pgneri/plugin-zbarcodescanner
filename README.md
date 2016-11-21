@@ -26,6 +26,7 @@ cordova plugin add https://github.com/pgneri/plugin-zbarcodescanner --variable C
 | formats | all |  Android Only, use example: "QR_CODE,PDF_417" |
 | orientation | "portrait" | default portrait, alter overlay mask |
 | flash | off |  iOS only, use 'off', 'on' or 'auto' |
+| titleButtonCancel | Cancel |  iOS only, title text to cancel button. |
 
 
 ### Example
@@ -51,7 +52,8 @@ cordova.plugins.barcodeScanner.scan(
              "prompt" : "Place a barcode inside the scan area", // supported on Android only
              "formats" : "QR_CODE,PDF_417", // Android Only
              "orientation" : "landscape", //  default portrait
-             "flash" : "auto" // iOS only
+             "flash" : "auto", // iOS only
+             "titleButtonCancel":"Cancel" // iOS only
          }
       );
 
