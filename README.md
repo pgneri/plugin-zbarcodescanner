@@ -16,10 +16,10 @@ To add this entry you can pass the following variable on plugin install.
 
 cordova plugin add https://github.com/pgneri/plugin-zbarcodescanner --variable CAMERA_USAGE_DESCRIPTION="To scan barcodes"
 
-Supported Platforms
+### Supported Platforms
 
-Android
-iOS
+* Android
+* iOS
 
 Note: the Android source forked https://github.com/phonegap/phonegap-plugin-barcodescanner version 6.0.3.
 
