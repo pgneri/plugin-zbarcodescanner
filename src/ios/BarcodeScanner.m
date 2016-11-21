@@ -125,7 +125,7 @@ NSString *_typeScanned;
         [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [[cancelButton titleLabel] setFont:[UIFont systemFontOfSize:18]];
         [cancelButton setTintColor:[UIColor whiteColor]];
-        [cancelButton setTitle:@"%@", _titleButtonCancel forState:UIControlStateNormal];
+        [cancelButton setTitle:[NSString stringWithFormat:@"%@", _titleButtonCancel] : forState:UIControlStateNormal];
         /*****************/
 
        //comment this to use official ZBarControls
