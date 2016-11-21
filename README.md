@@ -98,4 +98,5 @@ cordova.plugins.barcodeScanner.scan(
       );
 
 ```
-
+Example app:
+https://github.com/pgneri/plugin-camera-custom
