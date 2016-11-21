@@ -33,14 +33,17 @@ cordova plugin add https://github.com/pgneri/plugin-zbarcodescanner --variable C
 ```js
 cordova.plugins.barcodeScanner.scan(
          function (result) {
-             alert(result);
              alert("We got a barcode\n" +
                    "Result: " + result.text + "\n" +
                    "Format: " + result.format + "\n" +
                    "Cancelled: " + result.cancelled);
          },
          function (error) {
-             alert("Scanning failed: " + error);
+             if(error.cancelled==1){
+                  alert("Cancelled");
+             } else {
+                  alert("Scanning failed: " + error);
+             }
          },
          {
              "preferFrontCamera" : true, //  Android Only
