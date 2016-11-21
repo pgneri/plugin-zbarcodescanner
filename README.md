@@ -16,6 +16,39 @@ To add this entry you can pass the following variable on plugin install.
 
 cordova plugin add https://github.com/pgneri/plugin-zbarcodescanner --variable CAMERA_USAGE_DESCRIPTION="To scan barcodes"
 
+The following barcode types are currently supported:
+
+## Android
+
+* QR_CODE
+* DATA_MATRIX
+* UPC_E
+* UPC_A
+* EAN_8
+* EAN_13
+* CODE_128
+* CODE_39
+* CODE_93
+* CODABAR
+* ITF
+* RSS14
+* RSS_EXPANDED
+Not by default, but supported if you pass in the "formats" option:
+* PDF417
+* AZTEC
+
+## iOS
+
+* QR_CODE
+* DATA_MATRIX
+* UPC_E
+* UPC_A
+* EAN_8
+* EAN_13
+* CODE_128
+* CODE_39
+* ITF
+
 ### Supported Platforms
 
 * Android
@@ -65,3 +98,4 @@ cordova.plugins.barcodeScanner.scan(
       );
 
 ```
+
