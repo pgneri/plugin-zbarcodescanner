@@ -1,6 +1,7 @@
 ### Description
 
 Cordova plugin zBarCodeScanner.
+##### Compatible to model Brazilian Barcode - FEBRABAN. 
 
 ### Using the plugin
 
